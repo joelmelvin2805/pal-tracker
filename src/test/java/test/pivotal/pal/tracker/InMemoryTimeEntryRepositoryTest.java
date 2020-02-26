@@ -18,13 +18,16 @@ public class InMemoryTimeEntryRepositoryTest {
         long projectId = 123L;
         long userId = 456L;
         TimeEntry createdTimeEntry = repo.create(new TimeEntry(projectId, userId, LocalDate.parse("2017-01-08"), 8));
-
+        //System.out.println("values in createdTimeEntry:"  + createdTimeEntry.getId() + "," + createdTimeEntry.getProjectId() + "," +
+          //      createdTimeEntry.getUserId());
         long timeEntryId = 1L;
         TimeEntry expected = new TimeEntry(timeEntryId, projectId, userId, LocalDate.parse("2017-01-08"), 8);
-        assertThat(createdTimeEntry).isEqualTo(expected);
+        assertThat(createdTimeEntry).isEqualToComparingFieldByField(expected);
 
         TimeEntry readEntry = repo.find(createdTimeEntry.getId());
-        assertThat(readEntry).isEqualTo(expected);
+        //System.out.println("values in readEntry:"  + readEntry.getId() + "," + readEntry.getProjectId() + "," +
+          //      readEntry.getUserId());
+        assertThat(readEntry).isEqualToComparingFieldByField(expected);
     }
 
     @Test
@@ -38,7 +41,7 @@ public class InMemoryTimeEntryRepositoryTest {
         long timeEntryId = 1L;
         TimeEntry expected = new TimeEntry(timeEntryId, projectId, userId, LocalDate.parse("2017-01-08"), 8);
         TimeEntry readEntry = repo.find(timeEntryId);
-        assertThat(readEntry).isEqualTo(expected);
+        assertThat(readEntry).isEqualToComparingFieldByField(expected);
     }
 
     @Test
@@ -61,6 +64,10 @@ public class InMemoryTimeEntryRepositoryTest {
                 new TimeEntry(1L, 123L, 456L, LocalDate.parse("2017-01-08"), 8),
                 new TimeEntry(2L, 789L, 654L, LocalDate.parse("2017-01-07"), 4)
         );
+        /*List <TimeEntry> printTimeEntry = repo.list();
+        for (TimeEntry ts: printTimeEntry)
+            System.out.println("printTimeEntry_list" + ts.getId() +"'" + ts.getProjectId() +"," +
+                    ts.getUserId() +"," + ts.getHours() + "," + ts.getDate());*/
         assertThat(repo.list()).containsExactlyInAnyOrderElementsOf(expected);
     }
 
@@ -74,8 +81,8 @@ public class InMemoryTimeEntryRepositoryTest {
                 new TimeEntry(321L, 654L, LocalDate.parse("2017-01-09"), 5));
 
         TimeEntry expected = new TimeEntry(created.getId(), 321L, 654L, LocalDate.parse("2017-01-09"), 5);
-        assertThat(updatedEntry).isEqualTo(expected);
-        assertThat(repo.find(created.getId())).isEqualTo(expected);
+        assertThat(updatedEntry).isEqualToComparingFieldByField(expected);
+        assertThat(repo.find(created.getId())).isEqualToComparingFieldByField(expected);
     }
 
     @Test
@@ -110,11 +117,12 @@ public class InMemoryTimeEntryRepositoryTest {
         TimeEntry created = repo.create(new TimeEntry(projectId, userId, LocalDate.parse("2017-01-08"), 8));
 
         assertThat(created.getId()).isEqualTo(1);
+        System.out.println("values in createdTimeEntry:"  + created.getId()) ;
 
         repo.delete(created.getId());
 
         TimeEntry createdSecond = repo.create(new TimeEntry(projectId, userId, LocalDate.parse("2017-01-08"), 8));
-
+        System.out.println("values in createdSecondTimeEntry:"  + createdSecond.getId()) ;
         assertThat(createdSecond.getId()).isEqualTo(2);
     }
 }
